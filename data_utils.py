@@ -72,7 +72,7 @@ class IMDBDataset(object):
             pickle.dump((self.dict, self.inv_dict) , f)
 
     def _read_vocab(self):
-        with open(self.vocab_path, 'r') as f:
+        with open(self.vocab_path, 'r',encoding="utf8") as f:
             vocab_words = f.read().split('\n')
             self.vocab = dict([(w,i) for i, w in enumerate(vocab_words)])
             self.reverse_vocab = dict([(i,w) for w,i in self.vocab.items()])
@@ -88,8 +88,8 @@ class IMDBDataset(object):
         pos_files = [pos_path + '/' + x for x in os.listdir(pos_path) if x.endswith('.txt')]
         neg_files = [neg_path + '/' + x for x in os.listdir(neg_path) if x.endswith('.txt')]
 
-        pos_list = [open(x, 'r').read().lower() for x in pos_files]
-        neg_list = [open(x, 'r').read().lower() for x in neg_files]
+        pos_list = [open(x, 'r',encoding="utf8").read().lower() for x in pos_files]
+        neg_list = [open(x, 'r',encoding="utf8").read().lower() for x in neg_files]
         data_list = pos_list + neg_list
         labels_list = [1]*len(pos_list) + [0]*len(neg_list)
         return data_list, labels_list

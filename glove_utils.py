@@ -7,7 +7,7 @@ import pickle
 
 def loadGloveModel(gloveFile):
     print ("Loading Glove Model")
-    f = open(gloveFile,'r')
+    f = open(gloveFile,'r',encoding="utf8")
     model = {}
     for line in f:
         row = line.strip().split(' ')

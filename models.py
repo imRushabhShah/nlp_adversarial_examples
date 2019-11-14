@@ -16,13 +16,13 @@ class SentimentModel(object):
     
     def build_model(self):
         # shape = (batch_size, sentence_length, word_id)
-        self.x_holder = tf.placeholder(tf.int32, shape=[None, self.max_len])
-        self.y_holder = tf.placeholder(tf.int64, shape=[None])
-        self.seq_len = tf.cast(tf.reduce_sum(tf.sign(self.x_holder), axis=1), tf.int32)
-        with tf.device("/cpu:0"):
+        self.x_holder = tf.compat.v1.placeholder(tf.int32, shape=[None, self.max_len])
+        self.y_holder = tf.compat.v1.placeholder(tf.int64, shape=[None])
+        self.seq_len = tf.compat.v1.cast(tf.reduce_sum(tf.sign(self.x_holder), axis=1), tf.int32)
+        with tf.compat.v1.device("/cpu:0"):
             # embeddings matrix
-            self.embedding_w = tf.get_variable('embed_w', shape=[self.vocab_size,self.embeddings_dim],
-                                           initializer=tf.random_uniform_initializer(), trainable=True)
+            self.embedding_w = tf.compat.v1.get_variable('embed_w', shape=[self.vocab_size,self.embeddings_dim],
+                                           initializer=tf.compat.v1.random_uniform_initializer(), trainable=True)
             # embedded words
             self.e = tf.nn.embedding_lookup(self.embedding_w, self.x_holder)
         lstm = tf.contrib.rnn.BasicLSTMCell(self.lstm_size)
@@ -46,8 +46,8 @@ class SentimentModel(object):
         last_output = relevant
         if self.is_train:
             last_output = tf.nn.dropout(last_output, self.keep_probs)
-        self.w = tf.get_variable("w", shape=[self.lstm_size, 2], initializer=tf.truncated_normal_initializer(stddev=0.2))
-        self.b = tf.get_variable("b", shape=[2], dtype=tf.float32)
+        self.w = tf.compat.v1.get_variable("w", shape=[self.lstm_size, 2], initializer=tf.truncated_normal_initializer(stddev=0.2))
+        self.b = tf.compat.v1.get_variable("b", shape=[2], dtype=tf.float32)
         logits = tf.matmul(last_output, self.w) + self.b
         self.y = tf.nn.softmax(logits)
         self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(

@@ -27,18 +27,18 @@ if __name__ == '__main__':
     train_y = np.array(dataset.train_y)
     test_x = pad_sequences(dataset.test_seqs2, maxlen=max_len, padding='post')
     test_y = np.array(dataset.test_y)
-    sess = tf.Session()
+    sess = tf.compat.v1.Session()#tf.Session()
     batch_size = 64
     lstm_size = 128
     num_epochs = 20
-    with tf.variable_scope('imdb', reuse=False):
+    with tf.compat.v1.variable_scope('imdb', reuse=False):
         model = models.SentimentModel(batch_size=batch_size,
                            lstm_size = lstm_size,
                            max_len = max_len,
                            keep_probs=0.8,
                            embeddings_dim=300, vocab_size=embedding_matrix.shape[1],
 			   is_train = True)
-    with tf.variable_scope('imdb', reuse=True):
+    with tf.compat.v1.variable_scope('imdb', reuse=True):
         test_model = models.SentimentModel(batch_size=batch_size,
                                 lstm_size = lstm_size,
                                 max_len = max_len,keep_probs=0.8,
